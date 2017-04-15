@@ -1,84 +1,114 @@
-# ng-annotations
+# ng-original-template
 
-> Extract metadata of Angular components, directives, service etc.
+> Extract peices of templates from Angular components declaratively or via service
 
-[![Travis CI](https://img.shields.io/travis/gund/ng-annotations/master.svg?maxAge=2592000)](https://travis-ci.org/gund/ng-annotations)
-[![Coverage](https://img.shields.io/codecov/c/github/gund/ng-annotations.svg?maxAge=2592000)](https://codecov.io/gh/gund/ng-annotations)
-[![Npm](https://img.shields.io/npm/v/@gund/ng-annotations.svg?maxAge=2592000)](https://badge.fury.io/js/@gund/ng-annotations)
-[![Npm Downloads](https://img.shields.io/npm/dt/@gund/ng-annotations.svg?maxAge=2592000)](https://www.npmjs.com/package/@gund/ng-annotations)
+[![Travis CI](https://img.shields.io/travis/gund/ng-original-template/master.svg?maxAge=2592000)](https://travis-ci.org/gund/ng-original-template)
+[![Coverage](https://img.shields.io/codecov/c/github/gund/ng-original-template.svg?maxAge=2592000)](https://codecov.io/gh/gund/ng-original-template)
+[![Npm](https://img.shields.io/npm/v/ng-original-template.svg?maxAge=2592000)](https://badge.fury.io/js/ng-original-template)
+[![Npm Downloads](https://img.shields.io/npm/dt/ng-original-template.svg?maxAge=2592000)](https://www.npmjs.com/package/ng-original-template)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 ## Installation
 
 ```bash
-$ npm install --save @gund/ng-annotations
+$ npm install --save ng-original-template
 ```
 
 ## Usage
 
-Import `Annotations` class first:
+Import `OriginalTemplateModule` module in your root module:
 ```ts
-import { Annotations } from 'ng-annotations';
+import { OriginalTemplateModule } from 'ng-original-template';
+
+@NgModule({
+  imports: [OriginalTemplateModule.forRoot()]
+})
+export class AppModule { }
 ```
 
-Then get annotations for you component:
+You can also import this module into your sub-modules if you need to use directive.
+Just remember to import with `forRoot()` method only for your root module.
+
+### Declarative usage
+
+Now in component where you want to get it's template:
+1. Provide component type via `provideTemplateFrom()` function
+2. In template mark which section of template you want to get and in what property to save it via `originalTemplate` directive
 ```ts
-@Component({selector: 'some-component'})
+import { provideTemplateFrom } from 'ng-original-template';
+
+@Component({
+  selector: 'my-component',
+  providers: [provideTemplateFrom(MyComponent)] // <-- #1 Provide type
+  template: `<div>`
+    + `<h1 originalTemplate="h1">Hello</h1>`    // <-- #2 Mark template piece
+    + `<code>{{ h1 }}</code>`                   // <-- You can now simply render this piece of template
+  + `</div>`
+})
 class MyComponent {
-  constructor() {
-    const annotations = Annotations.getFor(MyComponent);
-    // annotations.selector here will be `some-component`
+  h1: string; // <-- Optionally create property where template will be stored to be AOT compatible
+}
+```
+
+### Programmatic usage
+
+You can also get pieces of template in your code via `OriginalTemplateService`:
+1. Just mark the piece of template you want with any attribute
+2. Pass component type and attribute regex string to match
+```ts
+import { OriginalTemplateService } from 'ng-original-template';
+
+@Component({
+  selector: 'my-component',
+  template: `<div>`
+    + `<h1 h1Marker>Hello</h1>` // <-- #1 Mark template piece
+  + `</div>`
+})
+class MyComponent {
+  constructor(originalTemplate: OriginalTemplateService) {
+    const h1 = originalTemplate.getTemplatePeice(MyComponent, 'h1Marker'); // <-- #2 Get a template string
+    // h1 now is a string containing `<h1 h1Marker>Hello</h1>`
   }
 }
 ```
 
 ## Documentation
 
-**Annotations**
+**OriginalTemplateDirective**
 ```ts
-class Annotations {
-  static getFor(type: Type<any>): AllDecorators;
-  static getForDirective(type: Type<any>): Directive;
-  static getForComponent(type: Type<any>): Component;
-  static getForPipe(type: Type<any>): Pipe;
+class OriginalTemplateDirective {
+  @Input() originalTemplate: string;
+  @Input() originalTemplateInner: boolean;
+  @Input() originalTemplatePrecise: boolean;
 }
 ```
 
-<sub>See [src/annotations.ts](./src/annotations.ts) for full reference</sub>
+<sub>See [src/original-template/original-template.directive.ts](./src/original-template/original-template.directive.ts) for full reference</sub>
 
-_Description_: Class with static methods to get annotations from type.
+_Description_: Directive to get piece of template declaratively. All calls forwarded to `OriginalTemplateService` internally.
+Input **originalTemplate** is _required_ to tell where to store template in component instance.
+Input **originalTemplateInner** is _optional_ to get only inner template (skip the node where this directive was placed).
+Input **originalTemplatePrecise** is _optional_ to enable precise mode for getting outer template (slower).
 
-**getFor()**
+**OriginalTemplateService**
 ```ts
-static getFor(type: Type<any>): AllDecorators;
+class OriginalTemplateService {
+  static maxPreciseIterations: number;
+  getTemplatePeice(component: Type<any>, matchRegexp: string, options?: {
+      inner?: boolean;
+      precise?: boolean;
+  }): string;
 ```
 
-_Description_: Get annotations for the type.
-It will return all annotations found. If you want more specific type use methods below.
+<sub>See [src/original-template/original-template.service.ts](./src/original-template/original-template.service.ts) for full reference</sub>
 
-**getForDirective()**
-```ts
-static getForDirective(type: Type<any>): Directive;
-```
+_Description_: Get a piece of template from component by directive match regexp.
+By default it will get outer template in not precise mode.
+If you selecting custom element - it will be the fastest method.
+For common html tags like `div` it might be inacurate - so you may want to enable precise mode.
+If you selecting inner template - precise mode will be used anyway.
 
-_Description_: Get annotations for directive.
-Calls getFor() but returns type specific for Directive.
-
-**getForComponent()**
-```ts
-static getForComponent(type: Type<any>): Component;
-```
-
-_Description_: Get annotations for component.
-Calls getFor() but returns type specific for Component.
-
-**getForPipe()**
-```ts
-static getForPipe(type: Type<any>): Pipe;
-```
-
-_Description_: Get annotations for pipe.
-Calls getFor() but returns type specific for Pipe.
+NOTE: `matchRegexp` argument is used to construct a regexp and is not escaped so you can build flexible matches.
 
 ## Development
 
