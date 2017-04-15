@@ -7,7 +7,8 @@ export interface ModuleConfig {
 }
 
 @NgModule({
-  declarations: [OriginalTemplateDirective]
+  declarations: [OriginalTemplateDirective],
+  exports: [OriginalTemplateDirective]
 })
 export class OriginalTemplateModule {
 
