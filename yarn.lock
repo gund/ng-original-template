@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@angular/common@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@angular/common/-/common-4.0.2.tgz#092b272f193d3ac9549b53792657e48e96f39f5d"
+
 "@angular/compiler-cli@^4.0.2":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-4.0.2.tgz#007c05728c836be15f99530e45effa1cd7c96284"
@@ -17,6 +21,14 @@
 "@angular/core@^4.0.2":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-4.0.2.tgz#195153f8623b59f07c30b3b8954e14842c3959c3"
+
+"@angular/platform-browser-dynamic@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-4.0.2.tgz#5a26f9a3e9f7eaf3cc7c02836cfae2e88cf1862f"
+
+"@angular/platform-browser@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-4.0.2.tgz#bce01526917a5b49606fc7e81600af85b15846ea"
 
 "@angular/tsc-wrapped@4.0.2":
   version "4.0.2"

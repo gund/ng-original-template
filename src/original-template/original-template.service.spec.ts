@@ -3,7 +3,7 @@
 import { TestBed, async, inject } from '@angular/core/testing';
 import { OriginalTemplateService } from './original-template.service';
 
-describe('Service: OriginalTemplate', () => {
+xdescribe('Service: OriginalTemplate', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [OriginalTemplateService]
