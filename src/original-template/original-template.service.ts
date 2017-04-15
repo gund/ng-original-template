@@ -1,12 +1,5 @@
 import { Injectable, Type } from '@angular/core';
-
-declare var global: any;
-
-class Annotations {
-  static getForComponent(type: Type<any>) {
-    return global['Reflect'].getOwnMetadata('annotations', type)[0];
-  }
-}
+import { Annotations } from '@gund/ng-annotations';
 
 @Injectable()
 export class OriginalTemplateService {
