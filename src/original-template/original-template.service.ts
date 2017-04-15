@@ -1,8 +1,10 @@
 import { Injectable, Type } from '@angular/core';
 
+declare var global: any;
+
 class Annotations {
   static getForComponent(type: Type<any>) {
-    return { template: 'THIS IS FAKE TEMPLATE' };
+    return global['Reflect'].getOwnMetadata('annotations', type)[0];
   }
 }
 
