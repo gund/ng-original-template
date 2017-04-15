@@ -5,7 +5,7 @@ import { OriginalTemplateDirective } from './original-template.directive';
 
 describe('Directive: OriginalTemplate', () => {
   it('should create an instance', () => {
-    let directive = new OriginalTemplateDirective();
+    let directive = new OriginalTemplateDirective(<any>{}, <any>{});
     expect(directive).toBeTruthy();
   });
 });
