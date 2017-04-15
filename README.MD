@@ -1,5 +1,7 @@
 # ng-original-template
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/gund/ng-original-template.svg)](https://greenkeeper.io/)
+
 > Extract peices of templates from Angular components declaratively or via service
 
 [![Travis CI](https://img.shields.io/travis/gund/ng-original-template/master.svg?maxAge=2592000)](https://travis-ci.org/gund/ng-original-template)
