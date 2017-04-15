@@ -4,9 +4,25 @@ import { Annotations } from '@gund/ng-annotations';
 @Injectable()
 export class OriginalTemplateService {
 
+  /**
+   * Maximum tags that can be traversed during precise parsing of template.
+   * You can increase this if your template is big.
+   */
   static maxPreciseIterations = 100;
+
   private static _templateCache = new Map<Type<any>, string>();
 
+  /**
+   * Get a piece of template from component by directive match regexp.
+   * By default it will get outer template in not precise mode.
+   * If you selecting custom element - it will be the fastest method.
+   * For common html tags like `div` it might be inacurate - so you ma want enable precise mode.
+   * If you selecting inner template - precise mode will be used anyway.
+   *
+   * @param component Component Type
+   * @param matchRegexp Matching directive
+   * @param options Optional options
+   */
   getTemplatePeice(component: Type<any>, matchRegexp: string, { inner = false, precise = false } = {}): string {
     const template = this._getTemplate(component);
 
