@@ -1,17 +1,18 @@
-import { OriginalTemplateService } from './original-template.service';
 import {
   Directive,
   ExistingProvider,
   forwardRef,
   Inject,
+  InjectionToken,
   Input,
   OnInit,
-  OpaqueToken,
   Optional,
-  Type
+  Type,
 } from '@angular/core';
 
-export const ORIGINAL_TEMPLATE_PROVIDER = new OpaqueToken('ORIGINAL_TEMPLATE_PROVIDER');
+import { OriginalTemplateService } from './original-template.service';
+
+export const ORIGINAL_TEMPLATE_PROVIDER = new InjectionToken<Type<any>>('ORIGINAL_TEMPLATE_PROVIDER');
 
 export function provideTemplateFrom(component: Type<any>): ExistingProvider {
   return {
